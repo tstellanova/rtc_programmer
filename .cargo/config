@@ -1,0 +1,13 @@
+#[target.thumbv7em-none-eabihf]
+#runner = "arm-none-eabi-gdb -q -x openocd.gdb"
+#runner = "arm-none-eabi-gdb -q -x segger.gdb"
+
+
+rustflags = [
+  "-C", "link-arg=-Tlink.x", # LDD
+]
+
+[build]
+target = "aarch64-unknown-linux-musl"
+# target = "aarch64-unknown-linux-gnu"
+#target = "thumbv7em-none-eabihf" # Cortex-M4F and Cortex-M7F (with FPU)

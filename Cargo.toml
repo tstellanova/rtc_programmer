@@ -3,10 +3,11 @@ name = "rtc_programmer"
 version = "0.1.1"
 authors = ["Todd Stellanova <tstellanova@users.noreply.github.com>"]
 edition = "2018"
+license = "BSD-3-Clause"
 
 [dependencies]
 ds323x = "0.3.0"
 chrono = "~0.4.11"
-linux-embedded-hal = "0.2.1"
-runas = "0.1.4"
+linux-embedded-hal = "0.3.0"
+
 
