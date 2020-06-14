@@ -29,18 +29,14 @@ fn main() {
                 //looking for low (indicates triger)
                 if 0 == val {
                     println!("\nINT triggered after {} sec", i);
-                    break;
+                   break; 
                 }
             }
         }
         Ok(())
     });
 
-    match follow {
-        Ok(()) => println!("GPIO pin interrupt"),
-        Err(err) => println!("GPIO monitor Error: {}", err),
-    }
-
+    if follow.is_err() { println!("following error: {:?}", follow); }
 
     // let mut delay_source = p_hal::Delay {};
     // //wait around for 1 minute

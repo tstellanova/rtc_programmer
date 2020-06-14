@@ -87,16 +87,19 @@ pub fn set_minutes_delay_alarm(rtc: &mut RtcDriver, minutes_delay: u8, interrupt
 }
 
 pub fn set_alarm1(rtc: &mut RtcDriver, alarm1: &DayAlarm1, interrupt: bool) {
+    if interrupt {
+	rtc.disable_alarm1_interrupts().unwrap();
+	rtc.disable_alarm2_interrupts().unwrap();
+	rtc.disable_square_wave();
+	rtc.disable_32khz_output().unwrap();
+	rtc.use_int_sqw_output_as_interrupt();
+    }
     rtc.clear_alarm1_matched_flag()
         .expect("couldn't clear alarm");
     //  Alarm should fire when hours, minutes, and seconds match
     rtc.set_alarm1_day(*alarm1, Alarm1Matching::HoursMinutesAndSecondsMatch)
         .expect("Couldn't set alarm");
     if interrupt {
-        rtc.disable_alarm1_interrupts().unwrap();
-        rtc.disable_32khz_output().unwrap();
-        rtc.use_int_sqw_output_as_interrupt()
-            .expect("Couldn't enable INTCN");
         rtc.enable_alarm1_interrupts().expect("Couldn't enable AIE");
     }
     println!("alarm1 set to: {:?}", alarm1);
