@@ -9,5 +9,7 @@ license = "BSD-3-Clause"
 ds323x = "0.3.0"
 chrono = "~0.4.11"
 linux-embedded-hal = "0.3.0"
+embedded-hal = "0.2.3"
+
 
 
