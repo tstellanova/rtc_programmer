@@ -93,6 +93,8 @@ pub fn set_alarm1(rtc: &mut RtcDriver, alarm1: &DayAlarm1, interrupt: bool) {
     rtc.set_alarm1_day(*alarm1, Alarm1Matching::HoursMinutesAndSecondsMatch)
         .expect("Couldn't set alarm");
     if interrupt {
+        rtc.disable_alarm1_interrupts().unwrap();
+        rtc.disable_32khz_output().unwrap();
         rtc.use_int_sqw_output_as_interrupt()
             .expect("Couldn't enable INTCN");
         rtc.enable_alarm1_interrupts().expect("Couldn't enable AIE");
