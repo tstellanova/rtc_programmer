@@ -19,7 +19,7 @@ fn main() {
 
     //Use GPIO2_A3 to trigger: GPIO pin 67?
     let input = p_hal::Pin::new(67);
-    let _ = input.with_exported(|| {
+    let follow  = input.with_exported(|| {
         input.set_direction(Direction::In)?;
         input.set_edge(Edge::FallingEdge)?;
         let mut poller = input.get_poller()?;
@@ -33,6 +33,12 @@ fn main() {
         }
         Ok(())
     });
+
+    match follow {
+        Ok(()) => println!("GPIO pin interrupt"),
+        Err(err) => println!("GPIO monitor Error: {}", err),
+    }
+
 
     // let mut delay_source = p_hal::Delay {};
     // //wait around for 1 minute
