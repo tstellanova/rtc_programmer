@@ -48,20 +48,12 @@ pub fn set_rtc_date_time_to_system_time(rtc: &mut RtcDriver) {
 
 /// Get the date and time according to the RTC
 pub fn get_date_time(rtc: &mut RtcDriver) -> chrono::DateTime<chrono::Utc> {
-    let dt = rtc.get_datetime().expect("could not get time");
-
-    let ndt: NaiveDateTime = NaiveDate::from_ymd(
-        dt.year() as i32,
-        dt.month() as u32,
-        dt.day() as u32,
-    )
-    .and_hms(dt.hour(), dt.minute() as u32, dt.second() as u32);
-
+    let ndt = rtc.get_datetime().expect("could not get time");
     let cdt = DateTime::<Utc>::from_utc(ndt, Utc);
     cdt
 }
 
-pub fn set_alarm_at_time_date(rtc: &mut RtcDriver, datetime: NaiveDateTime) {
+pub fn set_alarm_at_time_date(rtc: &mut RtcDriver, datetime: NaiveDateTime, interrupt: bool) {
     let alarm1 = DayAlarm1 {
         day: datetime.date().day() as u8,
         hour: Hours::H24(datetime.time().hour() as u8),
@@ -69,14 +61,7 @@ pub fn set_alarm_at_time_date(rtc: &mut RtcDriver, datetime: NaiveDateTime) {
         second: 1,
     };
 
-    rtc.set_alarm1_day(alarm1, Alarm1Matching::HoursMinutesAndSecondsMatch)
-        .expect("Couldn't set alarm");
-    rtc.enable_alarm1_interrupts()
-        .expect("couldn't enable alarm interrupts");
-    rtc.clear_alarm1_matched_flag()
-        .expect("couldn't clear alarm");
-
-    //TODO confirm that date time is set, somehow?
+    set_alarm1(rtc, &alarm1, interrupt);
 }
 
 /// Tell the RTC to set an alarm by delay from the current time
@@ -98,13 +83,19 @@ pub fn set_minutes_delay_alarm(rtc: &mut RtcDriver, minutes_delay: u8, interrupt
         second: 1,
     };
 
+    set_alarm1(rtc, &alarm1, interrupt);
+}
+
+pub fn set_alarm1(rtc: &mut RtcDriver, alarm1: &DayAlarm1, interrupt: bool) {
+    rtc.clear_alarm1_matched_flag()
+        .expect("couldn't clear alarm");
     //  Alarm should fire when hours, minutes, and seconds match
-    rtc.set_alarm1_day(alarm1, Alarm1Matching::HoursMinutesAndSecondsMatch)
+    rtc.set_alarm1_day(*alarm1, Alarm1Matching::HoursMinutesAndSecondsMatch)
         .expect("Couldn't set alarm");
     if interrupt {
         rtc.use_int_sqw_output_as_interrupt()
             .expect("Couldn't enable INTCN");
         rtc.enable_alarm1_interrupts().expect("Couldn't enable AIE");
     }
-    println!("alarm set to: {:?}", alarm1);
+    println!("alarm1 set to: {:?}", alarm1);
 }
