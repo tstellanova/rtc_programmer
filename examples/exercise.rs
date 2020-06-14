@@ -10,12 +10,19 @@ fn main() {
     set_rtc_date_time_to_system_time(&mut rtc);
     set_minutes_delay_alarm(&mut rtc, 1, true);
 
-    //wait around for 1 minute
     let mut delay_source = p_hal::Delay {};
-    delay_source.delay_ms(60_000u32);
-
-    let triggered = rtc.has_alarm1_matched().expect("couldn't check Alarm1");
-    println!("Alarm 1 triggered? {}", triggered);
+    //wait around for 1 minute
+    for i in 0..90 {
+        delay_source.delay_ms(1000u32);
+        let trig = rtc.has_alarm1_matched().expect("couldn't check Alarm1");
+        if trig {
+            println!("Alarm 1 triggered after {} sec", i);
+        }
+    }
+    let trig = rtc.has_alarm1_matched().expect("couldn't check Alarm1");
+    if !trig {
+        println!("Alarm 1 never triggered?");
+    }
 
     release_rtc_driver(rtc);
 
