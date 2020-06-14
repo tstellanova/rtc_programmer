@@ -80,7 +80,7 @@ pub fn set_minutes_delay_alarm(rtc: &mut RtcDriver, minutes_delay: u8, interrupt
         day: 1, // unused since we're using HoursMinutesAndSecondsMatch below
         hour: Hours::H24(hours as u8),
         minute: minutes as u8,
-        second: 1,
+        second: dt.second() as u8,
     };
 
     set_alarm1(rtc, &alarm1, interrupt);

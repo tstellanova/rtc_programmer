@@ -13,7 +13,6 @@ fn main() {
     let mut delay_source = p_hal::Delay {};
     //wait around for 1 minute
     for i in 0..90 {
-        delay_source.delay_ms(1000u32);
         let trig = rtc.has_alarm1_matched().expect("couldn't check Alarm1");
         if trig {
             println!("\nAlarm 1 triggered after {} sec", i);
@@ -22,7 +21,9 @@ fn main() {
         else {
             print!(".");
         }
+        delay_source.delay_ms(1000u32);
     }
+
     let trig = rtc.has_alarm1_matched().expect("couldn't check Alarm1");
     if !trig {
         println!("\nAlarm 1 never triggered?");
