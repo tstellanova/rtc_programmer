@@ -106,4 +106,5 @@ pub fn set_minutes_delay_alarm(rtc: &mut RtcDriver, minutes_delay: u8, interrupt
             .expect("Couldn't enable INTCN");
         rtc.enable_alarm1_interrupts().expect("Couldn't enable AIE");
     }
+    println!("alarm set to: {:?}", alarm1);
 }
