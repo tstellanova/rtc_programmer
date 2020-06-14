@@ -21,11 +21,13 @@ fn main() {
     let input = p_hal::Pin::new(67);
     let follow  = input.with_exported(|| {
         input.set_direction(Direction::In)?;
+        //input.set_active_low(true);
         input.set_edge(Edge::FallingEdge)?;
         let mut poller = input.get_poller()?;
         for i in 0..90 {
             if let Some(val) = poller.poll(1000)? {
-                if 1 == val {
+                //looking for low (indicates triger)
+                if 0 == val {
                     println!("\nINT triggered after {} sec", i);
                     break;
                 }
